@@ -32,7 +32,7 @@ jobs:
       - name: Download
         run: |
           cd work-space
-          wget -O yaap.zip "${{ github.event.inputs.ROM_URL }}" -q
+          wget -O yaap.zip "${{ github.event.inputs.ROM_URL }}"
           
       - name: Cut
         run: |
