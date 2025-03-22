@@ -36,6 +36,7 @@ jobs:
           
       - name: Cut
         run: |
+          cd work-space
           split -b 1900M --numeric-suffixes --suffix-length=2 yaap.zip rom.z
           echo "cat $(ls rom.z* | tr '\n' ' ') > newrom.zip" > Merge.sh
 
@@ -43,8 +44,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: | 
-            rom.z*
-            Merge.sh
+            work-space/rom.z*
+            work-space/Merge.sh
           name: ${{ github.run_id }}
           tag_name: ${{ github.run_id }}
           body: |
