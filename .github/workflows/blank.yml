@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Yaap Downloader
 
 # Controls when the workflow will run
 on:
@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
     inputs:
      ROM_URL:
-        description: 'ColorOS ROM'
+        description: 'Yaap ROM'
         required: true
 
   # Allows you to run this workflow manually from the Actions tab
