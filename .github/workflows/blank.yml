@@ -34,21 +34,8 @@ jobs:
           cd work-space
           wget -O yaap.zip "${{ github.event.inputs.ROM_URL }}"
           
-      - name: Cut
-        run: |
-          cd work-space
-          split -b 1900M --numeric-suffixes --suffix-length=2 yaap.zip rom.z
-          echo "cat $(ls rom.z* | tr '\n' ' ') > newrom.zip" > Merge.sh
-
-      - name: Upload to Release
-        uses: softprops/action-gh-release@v1
+      - name: Upload Rom
+        uses: actions/upload-artifact@v4
         with:
-          files: | 
-            work-space/rom.z*
-            work-space/Merge.sh
-          name: ${{ github.run_id }}
-          tag_name: ${{ github.run_id }}
-          body: |
-            Link: ${{ github.event.inputs.ROM_URL }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         name: yaap.zip
+         path: ./workspace/*
