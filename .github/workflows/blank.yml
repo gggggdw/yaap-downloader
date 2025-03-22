@@ -1,0 +1,53 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+     ROM_URL:
+        description: 'ColorOS ROM'
+        required: true
+
+  # Allows you to run this workflow manually from the Actions tab
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    steps:
+      - name: pre-env
+        run: |
+          mkdir work-space
+          sudo apt -y install git zip unzip python3 python-is-python3 aria2 xxd openssl openjdk-17-jre-headless python3-protobuf p7zip-full -y
+        
+      - name: Download
+        run: |
+          cd work-space
+          aria2c -d input -o yaap.zip -j 5 -x 16 "${{ github.event.inputs.ROM_URL }}"
+          
+      - name: Cut
+        run: |
+          split -b 1900M --numeric-suffixes --suffix-length=2 yaap.zip rom.z
+          echo "cat $(ls rom.z* | tr '\n' ' ') > newrom.zip" > Merge.sh
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: | 
+            rom.z*
+            Merge.sh
+          name: ${{ github.run_id }}
+          tag_name: ${{ github.run_id }}
+          body: |
+            Link: ${{ github.event.inputs.ROM_URL }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
