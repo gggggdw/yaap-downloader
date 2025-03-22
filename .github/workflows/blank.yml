@@ -32,7 +32,7 @@ jobs:
       - name: Download
         run: |
           cd work-space
-          aria2c -d input -o yaap.zip -j 5 -x 16 "${{ github.event.inputs.ROM_URL }}"
+          wget -O yaap.zip "${{ github.event.inputs.ROM_URL }}"
           
       - name: Cut
         run: |
